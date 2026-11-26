@@ -3,6 +3,26 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
+
+// Reads one line and returns it only if it is a single integer within [min, max].
+// Asks again on invalid input, and exits if the input stream ends.
+int readInt(int min, int max)
+{
+	std::string line;
+	while (std::getline(std::cin, line))
+	{
+		std::istringstream input(line);
+		int value = 0;
+		char extra;
+		if (input >> value && !(input >> extra) && value >= min && value <= max)
+		{
+			return value;
+		}
+		std::cout << "Maybe a typo? Try not doing that. Enter a number from " << min << " to " << max << ": ";
+	}
+	std::exit(0);
+}
 
 int main()
 {
@@ -24,7 +44,7 @@ int main()
 		std::cout << "8. Rolling New Character Stats" << std::endl;
 		std::cout << "9. View Roll History" << std::endl;
 		std::cout << "10. Exit" << std::endl;
-		std::cin >> choice;
+		choice = readInt(1, 10);
 
 		int numDice = 1;
 		int modifier = 0;
@@ -33,9 +53,9 @@ int main()
 		if (choice >= 1 && choice <= 7)
 		{
 			std::cout << "How many dice do you need to roll? ";
-			std::cin >> numDice;
+			numDice = readInt(1, 100); // Arbitrary upper limit for number of dice
 			std::cout << "Enter any modifier you need (ie: enter 0 for none, or a negative like -12): ";
-			std::cin >> modifier;
+			modifier = readInt(-100, 100); // Arbitrary upper limit for modifier
 		}
 
 		int result = 0;
@@ -48,7 +68,7 @@ int main()
 			std::cout << "2. Advantage Roll (Roll twice and take the higher)" << std::endl;
 			std::cout << "3. Disadvantage Roll (Roll twice and take the lower)" << std::endl;
 			std::cout << "Enter your choice: ";
-			std::cin >> rollType;
+			rollType = readInt(1, 3);
 
 			for (int i = 0; i < numDice; i++)
 			{
@@ -105,7 +125,7 @@ int main()
 						std::cout << "  -> Nat 20! My dude your frodo when he drops the ring into fires of Mount Doom! The EXP, The Gold, The GLORY!" << std::endl;
 						break;
 					case 3:
-						std::cout << "  -> NATURAL 20! FUCKING LEGENDARY! YOUR CHARCTER GOES SSJ 3!!!!!" << std::endl;						break;
+						std::cout << "  -> NATURAL 20! FUCKING LEGENDARY! YOUR CHARCTER GOES SSJ 3!!!!!" << std::endl;		
 						break;
 					}
 				}
@@ -287,10 +307,6 @@ int main()
 		else if (choice == 10)
 		{
 			std::cout << "You decided to exit and use real life dice :( " << std::endl;
-		}
-		else
-		{
-			std::cout << "Maybe a typo? Try not doing that." << std::endl;
 		}
 	}
 
